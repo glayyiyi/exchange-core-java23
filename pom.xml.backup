@@ -45,9 +45,9 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>23</java.version>
-        <maven.compiler.target>23</maven.compiler.target>
-        <maven.compiler.source>23</maven.compiler.source>
+        <java.version>1.8</java.version>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
 
         <delombok.output>target/delombok</delombok.output>
     </properties>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
 
@@ -278,57 +278,28 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.11.0</version>
-                        <configuration>
-                            <source>23</source>
-                            <target>23</target>
-                            <compilerArgs>
-                                <arg>--add-exports</arg>
-                                <arg>jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-                                <arg>--add-exports</arg>
-                                <arg>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-                                <arg>--add-exports</arg>
-                                <arg>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-                                <arg>--add-exports</arg>
-                                <arg>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-                                <arg>--add-exports</arg>
-                                <arg>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-                                <arg>--add-exports</arg>
-                                <arg>jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-                            </compilerArgs>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                    <version>1.18.30</version>
-                                </path>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.2.5</version>
-                        <configuration>
-                            <argLine>
-                                --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
-                                --add-exports jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED
-                                --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
-                                --add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
-                                --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
-                                --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
-                            </argLine>
-                        </configuration>
+                        <version>3.0.0-M3</version>
                     </plugin>
 
                     <plugin>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok-maven-plugin</artifactId>
-                        <version>1.18.20.0</version>
+                        <version>1.18.12.0</version>
                         <configuration>
-                            <skip>true</skip>
+                            <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+                            <outputDirectory>${delombok.output}</outputDirectory>
+                            <addOutputDirectory>false</addOutputDirectory>
+                            <encoding>UTF-8</encoding>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>delombok</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -343,10 +314,6 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${delombok.output}"/>
-                                        <copy todir="${delombok.output}">
-                                            <fileset dir="${project.basedir}/src/main/java"/>
-                                        </copy>
                                         <jar destfile="${project.build.directory}/${project.build.finalName}-sources.jar" basedir="${delombok.output}" />
                                     </target>
                                 </configuration>
@@ -437,21 +404,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <sourcepath>${project.basedir}/src/main/java</sourcepath>
-                            <additionalOptions>
-                                <additionalOption>--add-exports</additionalOption>
-                                <additionalOption>jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</additionalOption>
-                                <additionalOption>--add-exports</additionalOption>
-                                <additionalOption>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</additionalOption>
-                                <additionalOption>--add-exports</additionalOption>
-                                <additionalOption>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</additionalOption>
-                                <additionalOption>--add-exports</additionalOption>
-                                <additionalOption>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</additionalOption>
-                                <additionalOption>--add-exports</additionalOption>
-                                <additionalOption>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</additionalOption>
-                                <additionalOption>--add-exports</additionalOption>
-                                <additionalOption>jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</additionalOption>
-                            </additionalOptions>
+                            <sourcepath>${delombok.output}</sourcepath>
                         </configuration>
                     </plugin>
                 </plugins>
